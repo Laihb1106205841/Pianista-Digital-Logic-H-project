@@ -9,18 +9,18 @@
 
 // Revision 0.01 - File Created
 // Additional Comments: 
-//    input [8:0] Swithes, 9 个 开关  7个doreimi 2个升降
-//    output [20:0] BuzzerNote
+//    input [9:0] Swithes, 9 个 开关  7个doreimi 3个升降
+//    output [9:0] BuzzerNote
 //                21位 one-hot
 //////////////////////////////////////////////////////////////////////////////////
 
 
 module SwitchDealer(
-    input [8:0] Swithes,
-    output [20:0] BuzzerNote
+    input [9:0] Switch,
+    output [9:0] BuzzerNote
     );
     
-    
+    assign BuzzerNote = Switch;
     
     
 endmodule
