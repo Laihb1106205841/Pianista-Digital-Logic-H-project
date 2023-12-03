@@ -1,6 +1,10 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Three 7-bit string: low, mid, high.
+// module Buzzer(clk, note, pitch) // PARAMETER: clk时钟信号， note为7位的vector，pitch为3位的vector。
+// note说明： 音符的编码为one-hot. 0000001为do，0000010为re，以此类推。如需在同一八度内发多个音，则将对应音符的bit设为1。如1000001为同时发do和si。暂不支持跨多八度发多个音。
+// pitch说明：编码为one-hot(暂定)，001为低八度，010为原八度，100为高八度。
+// constraint文件：Buzzer_constraint.xdc
+// FPGA使用说明：开发板上左下拨码开关SW7-P5向右及其右侧6个分别代表do到si七个音符。U3、U2、V2为调整八度的拨码开关（必须且只能打开其中一个拨码开关，否则不会发声）
 
 // Engineer: Taojie
 // Create Date: 2023/11/19 22:56:53
@@ -21,22 +25,20 @@
 
 module Buzzer(
 input wire clk, // Clock signal
-input wire[6:0] low, // Note
+input wire[6:0] note, // Note
 input [2:0] pitch, 
 output speaker, // Buzzer output signal
 output sel,
-//output mark1,mark2,mark3,mark4,mark5,mark6,mark0,
-output [9:0] markLED
+output mark1,mark2,mark3,mark4,mark5,mark6,mark0
 );
 assign sel = 1; // Set M6 to 1.
-//assign mark0 = low[0];
-//assign mark1 = low[1];
-//assign mark2 = low[2];
-//assign mark3 = low[3];
-//assign mark4 = low[4];
-//assign mark5 = low[5];
-//assign mark6 = low[6];
-assign markLED = {low,pitch};
+assign mark0 = note[0];
+assign mark1 = note[1];
+assign mark2 = note[2];
+assign mark3 = note[3];
+assign mark4 = note[4];
+assign mark5 = note[5];
+assign mark6 = note[6];
 
 
 //wire [6:0]note;
@@ -242,11 +244,11 @@ reg pwm;
 initial pwm = 0;
 
 always @(posedge clk) begin
-    if (counter < notes[pitch][low]|| low == 0) begin 
+    if (counter < notes[pitch][note]|| note == 0) begin 
         counter <= counter + 1'b1;
     end 
     else begin
-        pwm <=~pwm;
+        pwm=~pwm;
         counter <= 0;
     end
 end
