@@ -1,0 +1,58 @@
+`timescale 1ns / 1ps
+
+///////////////////////////////
+// Led module
+//author Haibin Lai
+//date 11/19
+
+//input: 
+//input [9:0] Busline 总线
+
+//output:
+//[6:0]lednote: 对应7个led 灯
+//[2:0]HighLow: 对应升8降8
+
+////////////////////////////////
+
+`include "para.v"
+module Led(
+    input [9:0] BUZZERBusline,
+    input [9:0] LearnNote,
+    input [1:0] LEDStatus,
+    output reg [6:0] lednote,
+    output reg [2:0] HighLow
+    );
+    
+//    assign lednote = {Busline[9],Busline[8],Busline[7],Busline[6],Busline[5],Busline[4],Busline[3]}
+//     | {LearnNote[9],LearnNote[8],LearnNote[7],LearnNote[6],LearnNote[5],LearnNote[4],LearnNote[3]};
+
+//    assign HighLow = {BUZZERBusline[2],BUZZERBusline[1],BUZZERBusline[0]} |
+//     {LearnNote[2],LearnNote[1],LearnNote[0]};
+    
+    always @* begin
+        case(LEDStatus)
+            `LIGHTNDPLAY:
+            begin
+             lednote = {BUZZERBusline[9],BUZZERBusline[8],BUZZERBusline[7],BUZZERBusline[6],
+             BUZZERBusline[5],BUZZERBusline[4],BUZZERBusline[3]};
+             HighLow = {BUZZERBusline[2],BUZZERBusline[1],BUZZERBusline[0]};
+             end
+             
+             `LIGHTBEFOREPLAY:
+             begin
+             end
+             
+             `PLAYMODELIGHT:
+             begin
+             end
+             
+             `DISABLE:
+             begin
+             lednote = `DISABLE;
+             HighLow = `DISABLE;
+             end
+        endcase
+    end
+
+
+endmodule
