@@ -4,7 +4,7 @@
 //haibin Lai
 //
 // VM, centural of the programme
-// VMæœºå™¨è´Ÿè´£å¯¼å…¥çŠ¶æ€ï¼Œç„¶åå°†çŠ¶æ€ä¼ ç»™å„ä¸ªController
+// VM»úÆ÷¸ºÔğµ¼Èë×´Ì¬£¬È»ºó½«×´Ì¬´«¸ø¸÷¸öController
 //input: all of the signal,pins,...
 //function:all the little led...etc
 //output:led,shuweiguan,
@@ -12,43 +12,43 @@
 
 `include "para.v"
 
-//æ€»ç±»
-    //ä¸€å…±åŒ…å«ï¼š
-    //è¾“å…¥ INPUTï¼š
+//×ÜÀà
+    //Ò»¹²°üº¬£º
+    //ÊäÈë INPUT£º
     //1.PINS_NOTE 2.PINS_STATE 3.WASDE 4.RESET 5.UART
-    //è¾“å‡º OUTPUTï¼š
+    //Êä³ö OUTPUT£º
     //A.RESET  B.BUZZER  C.WASDE  D.UART_OUT  E.PRETEUS  F.LED
 module VirtualMachine(
 
-    input clk,                      //1.æˆ‘ä»¬çš„æ—¶é’ŸCLOCK
-    input [1:0] next_state,         //2.æ€»çŠ¶æ€STATE
+    input clk,                      //1.ÎÒÃÇµÄÊ±ÖÓCLOCK
+    input [1:0] next_state,         //2.×Ü×´Ì¬STATE
     input rst,                      //A.reset button, low for active
 
 //  From: Note Dealer ---------------//
-    input [9:0] Pin_Note,       //3.æˆ‘ä»¬çš„æŒ‰é”®éŸ³ç¬¦ NOTE 7+3,Pin_Note[0]æ˜¯LSB
-                                    //  UART_Note, æ¥è‡ªUARTçš„éŸ³ç¬¦,å°†é€šè¿‡UARTè¾“å…¥ï¼Œæ‰€ä»¥è¿™é‡Œç•¥è¿‡ UART'S NOTE
+    input [9:0] Pin_Note,       //3.ÎÒÃÇµÄ°´¼üÒô·û NOTE 7+3,Pin_Note[0]ÊÇLSB
+                                    //  UART_Note, À´×ÔUARTµÄÒô·û,½«Í¨¹ıUARTÊäÈë£¬ËùÒÔÕâÀïÂÔ¹ı UART'S NOTE
  // From: Buzzer -------------------//
-    output wire speaker,           //B.Buzzer output signalï¼›one_hot_Note,  one-hot-Note,å»å¾€ï¼šbuzzer  
+    output wire speaker,           //B.Buzzer output signal£»one_hot_Note,  one-hot-Note,È¥Íù£ºbuzzer  
     output sel,
                               
-// From: WASDY --------------------//å‡†å¤‡ä¸Šçº¿
-//    input [4:0] WASDE,           //4.æˆ‘ä»¬çš„5ä¸ªæŒ‰é”®ï¼Œè´Ÿè´£è°ƒæ•´é¡ºåº
-//    output [4:0] WASDE_Signal,   //C.æŒ‰é”®çš„æ˜ å°„ output:å»å¾€å„ä¸ªæŒ‰é”®
+// From: WASDY --------------------//×¼±¸ÉÏÏß
+//    input [4:0] WASDE,           //4.ÎÒÃÇµÄ5¸ö°´¼ü£¬¸ºÔğµ÷ÕûË³Ğò
+//    output [4:0] WASDE_Signal,   //C.°´¼üµÄÓ³Éä output:È¥Íù¸÷¸ö°´¼ü
     
-// From: UART----------------------//å‡†å¤‡ä¸Šçº¿
-//    input uart_intoFPGA,         //5.æ¥çš„æ•°æ®
-//    output uart_outFPGA,         //D.èµ°çš„æ•°æ®
+// From: UART----------------------//×¼±¸ÉÏÏß
+//    input uart_intoFPGA,         //5.À´µÄÊı¾İ
+//    output uart_outFPGA,         //D.×ßµÄÊı¾İ
     
 //From: Display-------------------//
     
 //    output [7:0] Tub1,
-//    output [7:0] Tub2,  //E.æ•°ç ç®¡çš„è¾“å‡ºPRETEUS å‡†å¤‡ä¸Šçº¿
+//    output [7:0] Tub2,  //E.ÊıÂë¹ÜµÄÊä³öPRETEUS ×¼±¸ÉÏÏß
     
     output [6:0] led_note,
     output [2:0] led_HighLow            //F.LED
     );
 
-//#------------------- STATE;ENABLE -------------------#enable åŠŸèƒ½è¿˜æ²¡æœ‰ä¸Šçº¿
+//#------------------- STATE;ENABLE -------------------#enable ¹¦ÄÜ»¹Ã»ÓĞÉÏÏß
     reg [1:0] current_state;            //state 
     reg [6:0] current_ENABLE;           //ENABLE
     
@@ -56,9 +56,9 @@ module VirtualMachine(
 //    reg uart_message;
 //    reg [9:0] UARTNOTE;
     
-//#------------------- æ•°ç æ£å“¥ -----------------------#//
+//#------------------- ÊıÂë¹÷¸ç -----------------------#//
     reg [1:0] Proteus_state;
-    reg [47:0] DigitalMoss;          //E.æ•°ç ç®¡çš„è¾“å‡ºPRETEUS å‡†å¤‡ä¸Šçº¿
+    reg [47:0] DigitalMoss;          //E.ÊıÂë¹ÜµÄÊä³öPRETEUS ×¼±¸ÉÏÏß
     
 //#------------------------ LED -----------------------#//
     reg [1:0] LEDStatus;   
@@ -78,15 +78,15 @@ module VirtualMachine(
     NoteDealer ND(
      //INPUT
       .clk(clk),                      //CLOCK]            
-      .Pin_Note(PINNOTE),             //æˆ‘ä»¬çš„æŒ‰é”®éŸ³ç¬¦ 7+3
-//    .UART_Note(UARTNOTE),           //æ¥è‡ªUARTçš„éŸ³ç¬¦ï¼Œå‡†å¤‡ä¸Šçº¿
+      .Pin_Note(PINNOTE),             //ÎÒÃÇµÄ°´¼üÒô·û 7+3
+//    .UART_Note(UARTNOTE),           //À´×ÔUARTµÄÒô·û£¬×¼±¸ÉÏÏß
 
             
     .one_hot_Note(NOTE)               // one-hot-Note OUTPUT
-//    .Memory_Note(MEMORYNOTE)å‡†å¤‡ä¸Šçº¿ OUTPUT
+//    .Memory_Note(MEMORYNOTE)×¼±¸ÉÏÏß OUTPUT
     );
     
-//    //***********WASD***************// å‡†å¤‡ä¸Šçº¿
+//    //***********WASD***************// ×¼±¸ÉÏÏß
 //    WASDY WASDY(
 //    .clk(clk),
 //    .WASDE(WASDE),
@@ -101,7 +101,7 @@ module VirtualMachine(
     .pitch({NOTE[9],NOTE[8],NOTE[7]}),
     
     .speaker(speaker),       
-    .sel(sel)        ,                //å¯åŠ¨ï¼
+    .sel(sel)        ,                //Æô¶¯£¡
     .markLED(out_led)
     );
 
@@ -115,14 +115,14 @@ module VirtualMachine(
     .HighLow(led_HighLow)//output
     );
     
-    //***********æ•°ç ç®¡**************//
+    //***********ÊıÂë¹Ü**************//
     proteus Pr(
     .DigitalMoss(DigitalMoss)
     //io
     );
 
     
-//    //***********UL*****************//å‡†å¤‡ä¸Šçº¿
+//    //***********UL*****************//×¼±¸ÉÏÏß
 //    uart_loop UL(
 //    .i_clk_sys(clk),
 //    .i_uart_rx(uart_intoFPGA),
@@ -132,17 +132,17 @@ module VirtualMachine(
 //     .UART_ENABLE(UART_ENABLE)
 //    );
     
-//    //***********MEMORY*************//å‡†å¤‡ä¸Šçº¿
+//    //***********MEMORY*************//×¼±¸ÉÏÏß
 //    Memory Me(
 //       .clk(clk)
 //   );
    
    
-//    ä¸‰æ®µå¼çŠ¶æ€æœºï¼Œå¯åŠ¨ï¼    SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+//    Èı¶ÎÊ½×´Ì¬»ú£¬Æô¶¯£¡    SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 
-//    é˜¶æ®µä¸€ï¼šFetch é˜¶æ®µï¼Œåœ¨æ—¶é’Ÿä¸Šå‡æ²¿è§¦å‘
+//    ½×¶ÎÒ»£ºFetch ½×¶Î£¬ÔÚÊ±ÖÓÉÏÉıÑØ´¥·¢
     always @(posedge clk or negedge rst) begin
-// åœ¨ Fetch é˜¶æ®µï¼Œåªè¿›è¡ŒçŠ¶æ€çš„è¯»å–ï¼ŒåŒæ­¥æ•°æ®
+// ÔÚ Fetch ½×¶Î£¬Ö»½øĞĞ×´Ì¬µÄ¶ÁÈ¡£¬Í¬²½Êı¾İ
         if(!rst) begin
             current_state <= `FREE_MODE;
         end
@@ -151,22 +151,22 @@ module VirtualMachine(
         end
     end
 
-//    é˜¶æ®µäºŒï¼šDecode é˜¶æ®µï¼Œåœ¨æ—¶é’Ÿæ’å®šæ—¶è§¦å‘
+//    ½×¶Î¶ş£ºDecode ½×¶Î£¬ÔÚÊ±ÖÓºã¶¨Ê±´¥·¢
 always @* begin
        case (current_state)
-       //è‡ªç”±æ¨¡å¼
+       //×ÔÓÉÄ£Ê½
        `FREE_MODE:
             current_ENABLE = `FREE_MODE_ENABLE;
             
-       //æ’­æ”¾æ¨¡å¼    
+       //²¥·ÅÄ£Ê½    
        `PLAY_MODE:
             current_ENABLE = `PLAY_MODE_ENABLE;
        
-       //UARTä¸²å£é€šä¿¡webæ¨¡å¼   
+       //UART´®¿ÚÍ¨ĞÅwebÄ£Ê½   
        `UART_MODE:
             current_ENABLE = `UART_MODE_ENABLE;
            
-       //å­¦ä¹ æ¨¡å¼
+       //Ñ§Ï°Ä£Ê½
        `LEARN_MODE:
             current_ENABLE = `LEARN_MODE_ENABLE;
             
@@ -175,7 +175,7 @@ always @* begin
        endcase 
     end
     
-//      é˜¶æ®µä¸‰ï¼šExecute é˜¶æ®µï¼Œåœ¨æ—¶é’Ÿä¸Šå‡æ²¿è§¦å‘
+//      ½×¶ÎÈı£ºExecute ½×¶Î£¬ÔÚÊ±ÖÓÉÏÉıÑØ´¥·¢
     always @(posedge clk or negedge rst) begin
             if(!rst) begin
               PINNOTE <=  `DISABLE;
@@ -227,8 +227,8 @@ always @* begin
      end
      
      //-------------------------------------------------------------------------------------&*&*(
-     // ç¥ˆç¥·ï¼š
-     //-----------ç¬‘çœ‹ä¼—ç”Ÿæˆæ­£æœï¼Œæ–¹çŸ¥è‡ªå·±æ˜¯å¦‚æ¥-----------//
+     // Æíµ»£º
+     //-----------Ğ¦¿´ÖÚÉú³ÉÕı¹û£¬·½Öª×Ô¼ºÊÇÈçÀ´-----------//
      //*                    _ooOoo_                       *//
      //*                   o8888888o                      *//
      //*                   88" . "88                      *//
