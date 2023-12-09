@@ -1,0 +1,43 @@
+//Founder : haibin
+//Special Thanks to:
+//https://blog.csdn.net/weixin_49780322/article/details/120216265
+//author:FPGA小迷弟
+
+module uart_Top(
+	input 	sys_clk,	//系统时钟
+	input 	sys_rst_n,	//系统复位
+	input 	uart_rxd,	//接收端口
+	output 	uart_txd,	//发送端口,向串口发送数据
+    output [7:0] GetMessage
+);
+parameter	UART_BPS=9600;			//波特率
+parameter	CLK_FREQ=100_000_000;	//系统频率100M	
+ 
+wire uart_en_w;
+wire [7:0] uart_data_w; 
+ assign GetMessage = uart_data_w; 
+//例化发送模块
+uart_tx#(
+	.BPS		    (UART_BPS),
+	.SYS_CLK_FRE	(CLK_FREQ))
+u_uart_tx(
+	.sys_clk		(sys_clk),//100M
+	.sys_rst_n	    (sys_rst_n),//reset
+	.uart_tx_en		(uart_en_w),
+	.uart_data	    (uart_data_w),	//要发送的数据
+	.uart_txd	    (uart_txd)//发送的信号
+);
+//例化接收模块
+uart_rx #(
+	.BPS				(UART_BPS),
+	.SYS_CLK_FRE		(CLK_FREQ))
+u_uart_rx(
+	.sys_clk			(sys_clk),//100M
+	.sys_rst_n		    (sys_rst_n),//reset
+	
+	.uart_rxd		    (uart_rxd),	//接收到的数据
+	.uart_rx_done	    (uart_en_w),//完成接收,会发一下
+	.uart_rx_data	    (uart_data_w)//收到的数据
+);
+ 
+endmodule
