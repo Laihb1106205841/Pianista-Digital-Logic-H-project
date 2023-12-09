@@ -4,70 +4,50 @@
 // Engineer: Haibin Lai
 // 
 // Create Date: 2023/11/29 23:50:05
-// Design Name: ¿ØÖÆÎÒÃÇµÄÒô·û
+// Design Name: æ§åˆ¶æˆ‘ä»¬çš„éŸ³ç¬¦
 // Module Name: NoteDealer
 
 // Target Devices: 
 // Tool Versions: 1.0.1
-// Description: ÈçºÎ°Ñ8Î»µÄnote×ª»»³É21Î»µÄone hot
+// Description: å¦‚ä½•æŠŠ8ä½çš„noteè½¬æ¢æˆ21ä½çš„one hot
 // 
 // Additional Comments:noop
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module NoteDealer(
+module BUZZERCONTROLLER(
     input clk,
-    input SD_ENABLE,
-    input UART_ENABLE,
-    input Memory_ENABLE,    
-    input [9:0] Pin_Note, //ÎÒÃÇµÄ°´¼üÒô·û 7+2
-//    input [8:0] UART_Note, //À´×ÔUARTµÄÒô·û,×¼±¸ÉÏÏß
+    input [1:0] State,
+    input [9:0] Pin_Note, //æˆ‘ä»¬çš„æŒ‰é”®éŸ³ç¬¦ 7+2
+    input [7:0] UART_Note, //æ¥è‡ªUARTçš„éŸ³ç¬¦,ä¸Šçº¿
+    input [9:0] DATABASE_Note,
+    input rst,
     
-    output [9:0] one_hot_Note, // one-hot-Note
-    output [9:0] Memory_out_Note
+    output reg [9:0] one_hot_Note // one-hot-Note
+//    output [9:0] Memory_out_Note
     );
-    wire [9:0] SWNOTE;
-    wire [9:0] UARTNOTE;
+    wire [9:0] trans_uart;
     
-    SwitchDealer SD(
-        .Switch(Pin_Note),
-        .BuzzerNote(SWNOTE)
+    UARTTRANS UART(
+    .UART_Note(UART_Note),
+    .TRAN(trans_uart),
+    .rst(rst),
+    .clk(clk)
     );
-//    UARTDealer   UD(×¼±¸ÉÏÏß
-//        .UART_Note(UART_Note),
-//        .UARTNOTE_out(UARTNOTE)
-//    );
     
-    or or0(SWNOTE[0],
-//    UARTNOTE,
-    one_hot_Note[0]);
-        or or1(SWNOTE[1],
-//    UARTNOTE,
-    one_hot_Note[1]);
-        or or2(SWNOTE[2],
-//    UARTNOTE,
-    one_hot_Note[2]);
-        or or3(SWNOTE[3],
-//    UARTNOTE,
-    one_hot_Note[3]);
-        or or4(SWNOTE[4],
-//    UARTNOTE,
-    one_hot_Note[4]);
-        or or5(SWNOTE[5],
-//    UARTNOTE,
-    one_hot_Note[5]);
-        or or6(SWNOTE[6],
-//    UARTNOTE,
-    one_hot_Note[6]);
-        or or7(SWNOTE[7],
-//    UARTNOTE,
-    one_hot_Note[7]);
-        or or8(SWNOTE[8],
-//    UARTNOTE,
-    one_hot_Note[8]);
-        or or9(SWNOTE[9],
-//    UARTNOTE,
-    one_hot_Note[9]);
-    
+
+always @* begin
+    case(State)
+        `FREE_MODE:
+            one_hot_Note = Pin_Note;
+        `UART_MODE:
+            one_hot_Note = trans_uart;
+        `LEARN_MODE:
+            one_hot_Note = Pin_Note;
+        `PLAY_MODE:
+            one_hot_Note = DATABASE_Note;
+    endcase
+end
+ 
 endmodule
