@@ -30,9 +30,9 @@ module VirtualMachine(
  // From: Buzzer -------------------//
     output wire speaker,           //B.Buzzer output signal；one_hot_Note,  one-hot-Note,去往：buzzer  
     output sel,
-                              
+
 // From: WASDY --------------------//准备上线
-//    input [4:0] WASDE,           //4.我们的5个按键，负责调整顺序
+    input [4:0] WASDE,           //4.我们的5个按键，负责调整顺序
 //    output [4:0] WASDE_Signal,   //C.按键的映射 output:去往各个按键
     
 // From: UART----------------------//准备上线
@@ -66,7 +66,6 @@ module VirtualMachine(
 
     
 //#--------------------- NOTE -------------------------#//
-
     wire [9:0] NOTE;   //out from NOTEDEALER, into Led and Buzzer
     reg [9:0] LearnNote;//用于处理学习模式中从数据库里取出来的note
     reg [9:0] PINNOTE; //专门处理input的数据的
@@ -86,7 +85,7 @@ module VirtualMachine(
       .one_hot_Note(NOTE)               // one-hot-Note OUTPUT
     );
     
-//    //***********WASD***************// 准备上线
+    //***********WASD***************// 准备上线
 //    WASDY WASDY(
 //    .clk(clk),
 //    .WASDE(WASDE),
@@ -121,7 +120,7 @@ module VirtualMachine(
     );
 
     
-//    //***********UL*****************//准备上线
+//    //***********UL*****************//上线
     UARTController UART(
     .clk(clk),
     .rst(rst)  ,   
@@ -130,10 +129,10 @@ module VirtualMachine(
    .storedMessage(UARTme) // 用于存储消息的寄存器   
     );
     
-//    //***********MEMORY*************//准备上线
-//    Memory Me(
-//       .clk(clk)
-//   );
+//    //***********MEMORY*************//上线中
+    Memory MEMORY(
+       .clk(clk)
+   );
    
    
 //    三段式状态机，启动！    SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
