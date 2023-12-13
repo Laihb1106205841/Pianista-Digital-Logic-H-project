@@ -34,6 +34,7 @@ module VirtualMachine(
 // From: WASDY --------------------//准备上线
     input [4:0] WASDE,           //4.我们的5个按键，负责调整顺序
 //    output [4:0] WASDE_Signal,   //C.按键的映射 output:去往各个按键
+    input Recording,
     
 // From: UART----------------------//准备上线
     input uart_rxd,//5.来的数据
@@ -44,26 +45,25 @@ module VirtualMachine(
 //    output [7:0] Tub1,
 //    output [7:0] Tub2,  //E.数码管的输出PRETEUS 准备上线
     output [9:0] NOTELED,           //F.LED
-    output [1:0] StatusLED  
+    output [1:0] StatusLED,  
+    output RecordingLED,
+    output wire ENABLEBUZZER
+    
     );///////////////////////////////////////////////////////////////////////////////END IO
+    
+    assign ENABLEBUZZER = 1'b0;
 
 //#------------------- STATE;ENABLE -------------------#enable 功能还没有上线
     reg [1:0] current_state;            //state 
     reg [6:0] current_ENABLE;           //ENABLE
     
-////#------------------- UART ---------------------------#//
-//    reg uart_message;
-    wire [7:0] UARTme;
+
     
 //#------------------- 数码棍哥 -----------------------#//
     reg [1:0] Proteus_state;
     reg [47:0] DigitalMoss;          //E.数码管的输出PRETEUS 准备上线
     
-//#------------------------ LED -----------------------#//
-//    reg  
     
-////#------------------- MEMORY -----------------------#//
-
     
 //#--------------------- NOTE -------------------------#//
     wire [9:0] NOTE;   //out from NOTEDEALER, into Led and Buzzer
@@ -72,8 +72,12 @@ module VirtualMachine(
     reg [9:0] DATABASE_Note;//专门处理播放模式下的数据的
     
 ////#-------------------- WASD ------------------------#//    
-//    reg [4:0] wasd_out;
+    reg [4:0] wasd_out;
+    reg [4:0] wasd_to_other;
     
+////#------------------- UART ---------------------------#//
+//    reg uart_message;
+    wire [7:0] UARTme;
     //********专门用来处理进入buzzer的NOTE***************//
     BUZZERCONTROLLER ND(
       .clk(clk),                      //CLOCK]   
@@ -85,12 +89,14 @@ module VirtualMachine(
       .one_hot_Note(NOTE)               // one-hot-Note OUTPUT
     );
     
+    
     //***********WASD***************// 准备上线
-//    WASDY WASDY(
-//    .clk(clk),
-//    .WASDE(WASDE),
-//    .WASDE_Signal(wasd_out)
-//    );
+    WASDY WASDY(
+    .clk(clk),
+    .rst(rst),
+    .WASDE(WASDE),
+    .WASDE_Signal(wasd_out)
+    );
     
     //***********BUZZER*************//
      wire[9:0] out_led; //output
@@ -104,13 +110,16 @@ module VirtualMachine(
     .markLED(out_led)
     );
 
+//#------------------------ LED -----------------------#//
+//    reg  
     //***********LED****************//
     Led Led(
     .BUZZERBusline(NOTE),       // 自由模式，播放模式所使用的line，和buzzer相同
     .LEARNBusline(LearnNote),   // 学习模式所使用的line，和buzzer不同，要求是一旦按下按键，led关闭。
     .Status(current_state),//Control STATUS
     .NOTELED(NOTELED), //output LED
-    .StaLed(StatusLED) //output LED
+    .StaLed(StatusLED) ,//output LED
+    .RecordingLED(RecordingLED)
     );
     
     //***********数码管**************//
@@ -130,8 +139,18 @@ module VirtualMachine(
     );
     
 //    //***********MEMORY*************//上线中
+////#------------------- MEMORY -----------------------#//
+    reg databaseEnable;
+reg [9:0] MreadNote;
     Memory MEMORY(
-       .clk(clk)
+    //in
+       .clk(clk),
+       .databaseEnable(databaseEnable),
+       .state(current_state),
+       //to do: more input
+    
+    //out
+        .readNote(MreadNote)
    );
    
    
@@ -191,35 +210,32 @@ always @* begin
                 `FREE_MODE_ENABLE:
                 begin
                     PINNOTE <=  Pin_Note;
-//                    LEDStatus <= `LIGHTNDPLAY;
+                    databaseEnable <= `DISABLE;
+                    wasd_to_other <= `DISABLE;
                  end
                  
                 `PLAY_MODE_ENABLE:
                 begin
                     PINNOTE <= `DISABLE;
-//                    LEDStatus <= `PLAYMODELIGHT;
+                    databaseEnable <= `ABLE;
+                    wasd_to_other <= wasd_out;
                 end
                 
                 `UART_MODE_ENABLE:
                 begin
                     PINNOTE <= `DISABLE;
-//                    LEDStatus <= `LIGHTNDPLAY;
+                    databaseEnable <= `DISABLE;
+                    wasd_to_other <= `DISABLE;
                 end
                 
                 `LEARN_MODE_ENABLE:
                 begin
                     PINNOTE <= Pin_Note;
-//                    LEDStatus <= `LIGHTBEFOREPLAY;
+                    databaseEnable <= `ABLE;
+                    wasd_to_other <= wasd_out;
                 end
                
-            endcase
-//            SD_ENABLE    = current_ENABLE[5];
-//            WASDY_ENABLE = current_ENABLE[4];
-//            BUZZER_ENABLE= current_ENABLE[0];
-//            LED_ENABLE   = current_ENABLE[1];
-//            UART_ENABLE  = current_ENABLE[2];
-//            PROTEUS_ENABLE=current_ENABLE[3];
-//            MEMORY_ENABLE= current_ENABLE[6];            
+            endcase      
             end
      end
 
