@@ -18,7 +18,7 @@
 // Additional Comments:
 // 
 //////////////////////////////////////////////////////////////////////////////////
-
+`include "para.v"
 
 module Memory(
     input clk,
@@ -41,7 +41,20 @@ module Memory(
     );
 
     initial begin
-         
+        LittleStar[0] = `OneHotHIDO;
+        LittleStar[1] = `OneHotHIDO;
+        LittleStar[2] = `OneHotHISO;
+        LittleStar[3] = `OneHotHISO;
+        LittleStar[4] = `OneHotHILA;
+        LittleStar[5] = `OneHotHILA;
+        LittleStar[6] = `OneHotHISO;
+        LittleStar[7] = `OneHotHIFA;
+        LittleStar[8] = `OneHotHIFA;
+        LittleStar[9] = `OneHotHIMI;
+        LittleStar[10] = `OneHotHIMI;
+        LittleStar[11] = `OneHotHIREI;
+        LittleStar[12] = `OneHotHIREI;
+        LittleStar[13] = `OneHotHIDO;
     end
     
 endmodule
