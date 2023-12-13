@@ -19,7 +19,7 @@
 module BUZZERCONTROLLER(
     input clk,
     input [1:0] State,
-    input [9:0] Pin_Note, //我们的按键音符 7+2
+    input [9:0] Pin_Note, //我们的按键音符 7+3
     input [7:0] UART_Note, //来自UART的音符,上线
     input [9:0] DATABASE_Note,
     input rst,
@@ -28,6 +28,17 @@ module BUZZERCONTROLLER(
 //    output [9:0] Memory_out_Note
     );
     wire [9:0] trans_uart;
+    
+    reg [9:0] Pin_Tran_Note;// 按键防抖
+    always @(posedge clk or negedge rst)
+    begin
+        if(!rst)
+            Pin_Tran_Note <= 0;
+        else
+            Pin_Tran_Note <= Pin_Note;    //读取按键输入
+
+    end
+
     
     UARTTRANS UART(
     .UART_Note(UART_Note),
@@ -40,11 +51,11 @@ module BUZZERCONTROLLER(
 always @* begin
     case(State)
         `FREE_MODE:
-            one_hot_Note = Pin_Note;
+            one_hot_Note = Pin_Tran_Note;
         `UART_MODE:
             one_hot_Note = trans_uart;
         `LEARN_MODE:
-            one_hot_Note = Pin_Note;
+            one_hot_Note = Pin_Tran_Note;
         `PLAY_MODE:
             one_hot_Note = DATABASE_Note;
     endcase
