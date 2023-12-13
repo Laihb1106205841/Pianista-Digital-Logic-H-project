@@ -27,6 +27,9 @@ module Memory(
     output readData
     );
     reg [15:2] address;
+    // Ð¡ÐÇÐÇµÄÀÖÆ×: abcdefg
+    reg[9:0] LittleStar[100:0];
+        
     
     //Create a instance of RAM(IP core), binding the ports
     RAM ram (
@@ -37,6 +40,8 @@ module Memory(
     .douta(readData) // output wire [31 : 0] douta
     );
 
-    
+    initial begin
+         
+    end
     
 endmodule
