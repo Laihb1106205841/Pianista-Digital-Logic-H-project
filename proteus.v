@@ -3,6 +3,61 @@
 // 梁杰林
 //////////////////////////////////////////////////////////////////////////////////
 
+module proteus(
+input wire [9:0] NOTE,
+input wire [9:0] store,
+input wire [47:0] SONG_NAME,
+input wire [1:0] state,
+input sys_clk,sys_rest,
+output reg [7:0] sel,
+output reg [7:0] tub1,
+output reg [7:0] tub2
+);
+
+wire [7:0] sel_FREE_MODE;
+wire [7:0] tub1_FREE_MODE;
+wire [7:0] tub2_FREE_MODE;
+wire [7:0] sel_AUTOPLAY_MODE;
+wire [7:0] tub1_AUTOPLAY_MODE;
+wire [7:0] tub2_AUTOPLAY_MODE;
+wire [7:0] sel_STUDY_MODE;
+wire [7:0] tub1_STUDY_MODE;
+wire [7:0] tub2_STUDY_MODE;
+
+proteus_FREE_MODE p1(.NOTE(NOTE),.sys_clk(sys_clk),.sys_rest(sys_rest),.sel(sel_FREE_MODE),.tub1(tub1_FREE_MODE),.tub2(tub2_FREE_MODE));
+proteus_AUTOPLAY_MODE p2(.SONG_NAME(SONG_NAME),.sys_clk(sys_clk),.sys_rest(sys_rest),.sel(sel_AUTOPLAY_MODE),.tub1(tub1_AUTOPLAY_MODE),.tub2(tub2_AUTOPLAY_MODE));
+proteus_STUDY_MODE p3 (.NOTE(NOTE),.store(store),.sys_clk(sys_clk),.sys_rest(sys_rest),.sel(sel_STUDY_MODE),.tub1(tub1_STUDY_MODE),.tub2(tub2_STUDY_MODE));
+
+always @(*) begin        //根据当前状态赋值
+      case(state)
+      2'b00:sel = sel_FREE_MODE;
+      2'b11:sel = sel_FREE_MODE;
+      2'b01:sel = sel_STUDY_MODE;
+      2'b10:sel = sel_AUTOPLAY_MODE;
+      default:sel = 8'b0000000;
+       endcase
+       end  
+always @(*) begin      
+      case(state)
+      2'b00:tub1 = tub1_FREE_MODE;
+      2'b11:tub1 = tub1_FREE_MODE;
+      2'b01:tub1 = tub1_STUDY_MODE;
+      2'b10:tub1 = tub1_AUTOPLAY_MODE;
+      default:tub1 = 8'b0000000;
+       endcase
+       end         
+ always @(*) begin      
+       case(state)
+       2'b00:tub2 = tub2_FREE_MODE;
+       2'b11:tub2 = tub2_FREE_MODE;
+       2'b01:tub2 = tub2_STUDY_MODE;
+       2'b10:tub2 = tub2_AUTOPLAY_MODE;
+       default:tub2 = 8'b0000000;
+        endcase
+        end        
+endmodule
+
+
 
 module proteus_FREE_MODE(                  //free mode 的 controller
 input wire [9:0] NOTE,
@@ -96,7 +151,8 @@ endmodule
 
 
 module proteus_STUDY_MODE(                  //study mode 的 controller
-input wire [5:0] grade,
+input wire [9:0] NOTE,
+input wire [9:0] store,
 input sys_clk,sys_rest,
 output reg [7:0] sel,
 output reg [7:0] tub1,
@@ -104,6 +160,9 @@ output reg [7:0] tub2
     );
    
     wire [47:0] in;
+    wire [5:0] grade;
+    
+    grade g1(.store(store),.NOTE(NOTE),.clk(sys_clk),.rst(sys_rest),.grade(grade));
    
    assign in[47:42] = 6'b010010;                // Display 'S' for 6'b010010
    assign in[41:36] = 6'b010011;                // Display 'T' for 6'b010011
