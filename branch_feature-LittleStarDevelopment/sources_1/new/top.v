@@ -27,12 +27,12 @@ module top(
     output speaker,
     output sel
 );
-    assign sel = 1;
+    assign sel = 1; // TEST ARE CONDUCTED ON EARPHONE, NOT BUZZER.
 
     reg [7:0]index; // noteBook[index] sould be the note to play.
-    wire [9:0]bus; // note + pitch.
+    wire [9:0]bus; // note + pitch. The output from Memory module.
     reg [31:0]counter; // counter for 1 second, each note play 1 sec.
-    reg [31:0] delay_counter;
+    reg [31:0] delay_counter; // counter for the spcace between two  consecutive notes.
     reg stop; // indicating the space between two notes, act as an enable in Buzzer.
 
     initial begin
@@ -41,10 +41,9 @@ module top(
         delay_counter = 0;
         stop = 0;
     end
-    // Testing, play just one note from little star.
-     Memory mem(index, bus); // Get the note and pitch from the memory module. It is working.
 
-     // we should set some space between two notes.
+     Memory mem(index, bus); // Get the note and pitch from the memory module.
+
     always @(posedge clk) begin
         if (counter < 50000000) begin
             counter <= counter + 1; 

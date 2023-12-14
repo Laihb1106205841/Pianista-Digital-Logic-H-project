@@ -30,7 +30,7 @@ module Memory(
     reg [15:2] address;
     reg[9:0] LittleStar[100:0];
         
-    
+    // TEMPORARILY COMMENTED OUT
     //Create a instance of RAM(IP core), binding the ports
     /*RAM ram (
     .clka(clk), // input wire clka
