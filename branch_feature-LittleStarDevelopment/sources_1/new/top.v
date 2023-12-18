@@ -6,6 +6,7 @@
 // Design Name: 
 // Module Name: top
 // Using Vivado IP core to implement storage.
+// NOTE: design and constraint files are based on earphone.
 // Achieved: Store a piece of notes of Little Star in rom. Functinality verified.
 // Todo next:
 // 1. Complete the whole pieces for Little Star. 
