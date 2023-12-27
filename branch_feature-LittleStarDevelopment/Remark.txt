@@ -1,0 +1,7 @@
+使用了两个模块： Memory和Buzzer，添加top模块使两者交互。
+
+对para.v中的音符进行了一些修改，使得可以直接传入buzzer使用。
+
+在buzzer模块中添加了stop，即enable，使得在连续两个音符之间有间隔。
+
+🎶
