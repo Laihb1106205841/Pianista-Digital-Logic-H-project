@@ -30,8 +30,8 @@ set_property -dict {PACKAGE_PIN R2 IOSTANDARD LVCMOS33} [get_ports {note_and_pit
 set_property -dict {PACKAGE_PIN M4 IOSTANDARD LVCMOS33} [get_ports {note_and_pitch_user[8]}]
 set_property -dict {PACKAGE_PIN N4 IOSTANDARD LVCMOS33} [get_ports {note_and_pitch_user[9]}]
 
-set_property -dict {PACKAGE_PIN T1 IOSTANDARD LVCMOS33} [get_ports speaker]
-set_property -dict {PACKAGE_PIN M6 IOSTANDARD LVCMOS33} [get_ports sel]
+#set_property -dict {PACKAGE_PIN T1 IOSTANDARD LVCMOS33} [get_ports speaker]
+#set_property -dict {PACKAGE_PIN M6 IOSTANDARD LVCMOS33} [get_ports sel]
 
 # set_property -dict {PACKAGE_PIN R2 IOSTANDARD LVCMOS33} [get_ports {n_th_song[1]}]
 # set_property -dict {PACKAGE_PIN M4 IOSTANDARD LVCMOS33} [get_ports {n_th_song[0]}]
